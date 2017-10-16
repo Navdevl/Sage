@@ -1,0 +1,1 @@
+REMIND_HELP = '```!remind to {message} at {HH:MMam|pm} \n\nExample:\n\t !remind to order tea at 11:00am```'
