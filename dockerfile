@@ -7,7 +7,6 @@ RUN apt-get update \
   && ln -s /usr/bin/python3 python \
   && pip3 install --upgrade pip
 
-# RUN pip3 install sqlite3
 RUN pip3 install discord
 
 CMD 'mkdir -p /var/www/discord'

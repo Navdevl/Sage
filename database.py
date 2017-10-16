@@ -9,11 +9,6 @@ class Database:
   def __init__(self):
     self.conn = sqlite3.connect(SQLITE_DB)
     self.create()
-    self.cursor = self.conn.cursor()
-    # self.add_test_reminder()
-    # self.show_all()
-    # self.conn.commit()
-    # self.conn.close()
 
   def name_generator(self, size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -51,8 +46,7 @@ class Database:
     self.conn.commit()
 
   def show_all(self):    
-    results = self.cursor.execute("SELECT * from REMINDERS;").fetchall()
-    # print(self.convert_to_message(results))
+    results = self.conn.execute("SELECT * from REMINDERS;").fetchall()
     return results
 
 
