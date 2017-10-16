@@ -10,6 +10,16 @@ Go to https://www.python.org/downloads/ and download the package that matches re
 ### Installing Python Packages
 Run [install.sh](https://github.com/Navdevl/MrPerfect/blob/master/install.sh) from terminal. It will install all the necessary packages. If you wanted to manually install packages in any virtual environment, you can check the requirements.txt file to see the necessary packages with minimum version needed.
 
+# Usage
+- **Initialize the channel for MrPerfect to send reminders.**
+Type `!init` on the channel where you want the bot to send messages
+- **Add reminder to MrPerfect.**
+Type `!remind to do something at HH:MM(am|pm)`
+- **Ask MrPerfect to list all the reminders**
+Type `!list` to get the list of reminders with its unique id.
+- **Delete a reminder from MrPerfect's list**
+Type `!delete uid` to delete the remider
+
 # License
 MIT License
 
