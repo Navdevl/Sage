@@ -1,6 +1,14 @@
 # MrPerfect
 A Discord Bot to Add/View/Delete Reminders. 
 
+# Requirements
+Python 3.5 or more
+
+# Installation
+### Installing Python 3
+Go to https://www.python.org/downloads/ and download the package that matches required version.
+### Installing Python Packages
+Run install.sh from terminal. It will install all the necessary packages. If you wanted to manually install packages in any virtual environment, you can check the requirements.txt file to see the necessary packages with minimum version needed.
 
 # License
 MIT License
