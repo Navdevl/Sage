@@ -55,13 +55,22 @@ class Database:
     return self.commit()
 
   def fetch_reminders(self, remind_time):
+    """
+    Fetch Reminder from the database of particular time
+    """
     return self.conn.execute("SELECT * FROM REMINDERS LEFT JOIN SERVER ON REMINDERS.SERVER_ID = SERVER.ID where REMIND_AT = '{0}';".format(remind_time)).fetchall()
 
   def delete_reminder(self, uid, server_id):
+    """ 
+    Delete a reminder from the database given its unique id
+    """
     self.conn.execute("DELETE FROM REMINDERS WHERE UID = '{0}' AND SERVER_ID = '{1}';".format(uid, server_id))
     return self.commit()
 
   def show_all(self, server_id):    
+    """
+    List down all the reminders belongs to particular server
+    """
     results = self.conn.execute("SELECT * FROM REMINDERS LEFT JOIN SERVER ON REMINDERS.SERVER_ID = SERVER.ID WHERE SERVER_ID = {0};".format(server_id)).fetchall()
     return results
 
