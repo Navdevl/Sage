@@ -18,16 +18,14 @@ class Main:
 
   async def remind(self):
     await self.client.wait_until_ready()
-    if self.channel is None:
-      await asyncio.sleep(60)
-    while not self.client.is_closed:
-      now = datetime.datetime.now().strftime("%H:%M:00")
-      results = self.db.fetch_reminders(now)
-      for result in results:
-        task = result[1]
-        message_to_send = "Reminding @everyone to {0}".format(task)
-        await self.client.send_message(self.channel, message_to_send)
-      await asyncio.sleep(60) # task runs every 60 seconds
+    if self.channel is not None:
+      while not self.client.is_closed:
+        results = self.db.fetch_reminders()
+        for result in results:
+          task = result[1]
+          message_to_send = "Reminding @everyone to {0}".format(task)
+          await self.client.send_message(self.channel, message_to_send)
+        await asyncio.sleep(60) # task runs every 60 seconds
 
   def check_channel_initialized(self):
     if self.channel is None:

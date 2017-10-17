@@ -43,8 +43,8 @@ class Database:
     except:
       return False
 
-  def fetch_reminders(self, remind_time, server_id):
-    return self.conn.execute("SELECT * FROM REMINDERS where REMIND_AT = '{0}' AND SERVER_ID = '{1}';".format(remind_time, server_id)).fetchall()
+  def fetch_reminders(self, remind_time = datetime.datetime.now().strftime("%H:%M:00")):
+    return self.conn.execute("SELECT * FROM REMINDERS where REMIND_AT = '{0}';".format(remind_time, server_id)).fetchall()
 
   def delete_reminder(self, uid, server_id):
     self.conn.execute("DELETE FROM REMINDERS WHERE UID = '{0}' AND SERVER_ID = '{1}';".format(uid, server_id))
