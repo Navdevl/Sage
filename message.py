@@ -7,10 +7,9 @@ class Message:
   def __init__(self):
     self.db = Database()
     self.extractor = Extractor()
-    self.db = Database()
 
-  def message_for_list(self):
-    results = self.db.show_all()
+  def message_for_list(self, server_id):
+    results = self.db.show_all(server_id)
     message_to_send = self.convert_to_message(results)
     if message_to_send is '':
       message_to_send = 'No reminders'
@@ -20,16 +19,16 @@ class Message:
     result = self.extractor.extract_reminder_components(message.content)
     if result is not None:
       time = self.extractor.extract_time(result[1])
-      name = result[0]
-      if self.db.add_reminder(name, 'daily', time):
+      name = result[0].strip()
+      if self.db.add_reminder(name, message.server.id, 'daily', time):
         return "Added reminder to {0} at {1} :smile:".format(result[0], result[1])
       else:
         return 'Oops. Something went wrong.!'
 
   def message_for_delete(self, message):
-    uid = self.extract_uid(message.content)
+    uid = self.extractor.extract_uid(message.content)
     if uid is not None:
-      if self.db.delete_reminder(uid):
+      if self.db.delete_reminder(uid, message.server.id):
         return 'Deleted Successfully'
       else:
         return 'Sorry, No such UID'
@@ -42,9 +41,9 @@ class Message:
 
   def convert_to_message(self, results):
     message = '```'
-    if results is not None:
+    if len(results) > 0:
       for result in results:
-        message += "{0} - Reminder to {1} at {2} \n".format(result[0], result[1].strip(), result[3])
+        message += "{0} - Reminder to {1} at {2} \n".format(result[0], result[2], result[4])
     else:
       return ''
     return message + '```'

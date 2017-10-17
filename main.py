@@ -50,7 +50,7 @@ class Main:
         return
 
       if '!list' in message.content:
-        message_to_send = self.message.message_for_list()
+        message_to_send = self.message.message_for_list(message.server.id)
         await self.client.send_message(self.channel, message_to_send)
 
       elif message.content == '!help':

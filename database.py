@@ -26,27 +26,28 @@ class Database:
     """
     self.conn.execute('''CREATE TABLE IF NOT EXISTS REMINDERS
              (UID VARCHAR2 PRIMARY KEY,
+             SERVER_ID INTEGER NOT NULL,
              NAME TEXT NOT NULL DEFAULT test,
              FREQUENCY TEXT NOT NULL,
              REMIND_AT TEXT NOT NULL);''')
 
-  def add_reminder(self, name, frequency, time):
+  def add_reminder(self, name, server_id, frequency, time):
     """ 
     Add Reminder to the database
     """
     uid = self.name_generator()
-    self.conn.execute("INSERT INTO REMINDERS (UID, NAME, FREQUENCY, REMIND_AT) VALUES ('{0}', '{1}', '{2}', '{3}');".format(uid, name, frequency, time))
+    self.conn.execute("INSERT INTO REMINDERS (UID, NAME, SERVER_ID, FREQUENCY, REMIND_AT) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');".format(uid, name, server_id, frequency, time))
     try:
       self.conn.commit()
       return True
     except:
       return False
 
-  def fetch_reminders(self, remind_time):
-    return self.conn.execute("SELECT * FROM REMINDERS where REMIND_AT = '{0}';".format(remind_time)).fetchall()
+  def fetch_reminders(self, remind_time, server_id):
+    return self.conn.execute("SELECT * FROM REMINDERS where REMIND_AT = '{0}' AND SERVER_ID = '{1}';".format(remind_time, server_id)).fetchall()
 
-  def delete_reminder(self, uid):
-    self.conn.execute("DELETE FROM REMINDERS WHERE UID = '{0}';".format(uid))
+  def delete_reminder(self, uid, server_id):
+    self.conn.execute("DELETE FROM REMINDERS WHERE UID = '{0}' AND SERVER_ID = '{1}';".format(uid, server_id))
     self.conn.commit()
 
   def add_test_reminder(self):
@@ -54,8 +55,8 @@ class Database:
     self.conn.execute("INSERT INTO REMINDERS (NAME, FREQUENCY, REMIND_AT) VALUES ('test', 'daily', '2017-10-13 16:16:00.071742');")
     self.conn.commit()
 
-  def show_all(self):    
-    results = self.conn.execute("SELECT * from REMINDERS;").fetchall()
+  def show_all(self, server_id):    
+    results = self.conn.execute("SELECT * from REMINDERS WHERE SERVER_ID = {0};".format(server_id)).fetchall()
     return results
 
   def close(self):
