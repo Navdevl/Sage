@@ -24,23 +24,27 @@ class Database:
     Create the table if not exists
     See the documentation for the detailed information of table structure
     """
+    self.conn.execute('''CREATE TABLE IF NOT EXISTS SERVER
+             (ID INTEGER PRIMARY KEY,
+             CHANNEL_ID INTEGER NOT NULL);''')
+
     self.conn.execute('''CREATE TABLE IF NOT EXISTS REMINDERS
              (UID VARCHAR2 PRIMARY KEY,
-             SERVER_ID INTEGER NOT NULL,
-             NAME TEXT NOT NULL DEFAULT test,
+             SERVER_ID INTEGER,
+             NAME TEXT NOT NULL,
              FREQUENCY TEXT NOT NULL,
-             REMIND_AT TEXT NOT NULL);''')
-
-    self.conn.execute('''CREATE TABLE IF NOT EXISTS CHANNELS
-             (SERVER_ID INTEGER NOT NULL,
-             CHANNEL_ID INTEGER NOT NULL);''')
+             REMIND_AT TEXT NOT NULL,
+             FOREIGN KEY(SERVER_ID) REFERENCES SERVER(ID));''')
 
   def add_channel_to_server(self, server_id, channel_id):
     """ 
     Add default channel of the server
     """
-    self.conn.execute("INSERT INTO CHANNELS (SERVER_ID, CHANNEL_ID) VALUES ('{0}', '{1}');".format(server_id, channel_id))
+    self.conn.execute("INSERT OR REPLACE INTO SERVER (ID, CHANNEL_ID) VALUES ('{0}', '{1}');".format(server_id, channel_id))
     return self.commit()
+
+  def get_server_channel(self, server_id):
+    return self.conn.execute("SELECT * FROM SERVER WHERE ID = '{0}' LIMIT 1;".format(server_id)).fetchall()
 
   def add_reminder(self, name, server_id, frequency, time):
     """ 
@@ -48,17 +52,17 @@ class Database:
     """
     uid = self.name_generator()
     self.conn.execute("INSERT INTO REMINDERS (UID, NAME, SERVER_ID, FREQUENCY, REMIND_AT) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');".format(uid, name, server_id, frequency, time))
-      return self.commit()
+    return self.commit()
 
-  def fetch_reminders(self, remind_time = datetime.datetime.now().strftime("%H:%M:00")):
-    return self.conn.execute("SELECT * FROM REMINDERS where REMIND_AT = '{0}';".format(remind_time, server_id)).fetchall()
+  def fetch_reminders(self, remind_time):
+    return self.conn.execute("SELECT * FROM REMINDERS LEFT JOIN SERVER ON REMINDERS.SERVER_ID = SERVER.ID where REMIND_AT = '{0}';".format(remind_time)).fetchall()
 
   def delete_reminder(self, uid, server_id):
     self.conn.execute("DELETE FROM REMINDERS WHERE UID = '{0}' AND SERVER_ID = '{1}';".format(uid, server_id))
     return self.commit()
 
   def show_all(self, server_id):    
-    results = self.conn.execute("SELECT * from REMINDERS WHERE SERVER_ID = {0};".format(server_id)).fetchall()
+    results = self.conn.execute("SELECT * FROM REMINDERS LEFT JOIN SERVER ON REMINDERS.SERVER_ID = SERVER.ID WHERE SERVER_ID = {0};".format(server_id)).fetchall()
     return results
 
   def commit(self):

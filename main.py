@@ -14,22 +14,25 @@ class Main:
     self.db = Database()
     self.extractor = Extractor()
     self.message = Message()
-    self.channel = None
 
   async def remind(self):
     await self.client.wait_until_ready()
-    if self.channel is not None:
-      while not self.client.is_closed:
-        results = self.db.fetch_reminders()
-        for result in results:
-          task = result[1]
-          message_to_send = "Reminding @everyone to {0}".format(task)
-          await self.client.send_message(self.channel, message_to_send)
-        await asyncio.sleep(60) # task runs every 60 seconds
+    while not self.client.is_closed:
+      now = datetime.datetime.now().strftime("%H:%M:00")
+      results = self.db.fetch_reminders(now)
+      for result in results:
+        task = result[2]
+        message_to_send = "Reminding @everyone to {0}".format(task)
+        channel = self.client.get_channel(str(result[6]))
+        await self.client.send_message(channel, message_to_send)
+      await asyncio.sleep(60) # task runs every 60 seconds
 
-  def check_channel_initialized(self):
-    if self.channel is None:
-      return False
+  def get_server_channel(self, server):
+    channel_info = self.db.get_server_channel(server.id)
+    if len(channel_info) > 0:
+      channel = self.client.get_channel(str(channel_info[0][1]))
+      return channel
+    return None
 
   def run(self):
     @self.client.event
@@ -39,29 +42,34 @@ class Main:
 
     @self.client.event
     async def on_message(message):
-      if message.content == '!init':
-        self.channel = message.channel
-        await self.client.send_message(self.channel, "**{0}** is initialized for showing reminders".format(message.channel.name))
-
-      if self.check_channel_initialized() is False:
-        await self.client.send_message(self.channel, 'Initialize the channel using `!init`')
+      if message.author == self.client.user:
         return
+
+      channel = self.get_server_channel(message.server)
+
+      if message.content == '!init':
+        message_to_send = self.message.message_for_init(message)
+        await self.client.send_message(message.channel, message_to_send)
+        return
+
+      if channel is None:
+        return await self.client.send_message(message.channel, 'Initialize a channel using `!init`')
 
       if '!list' in message.content:
         message_to_send = self.message.message_for_list(message.server.id)
-        await self.client.send_message(self.channel, message_to_send)
+        await self.client.send_message(channel, message_to_send)
 
       elif message.content == '!help':
         message_to_send = self.message.message_for_help()
-        await self.client.send_message(self.channel, message_to_send)
+        await self.client.send_message(channel, message_to_send)
 
       elif '!delete' in message.content:
         message_to_send = self.message.message_for_delete(message)
-        await self.client.send_message(self.channel, message_to_send)
+        await self.client.send_message(channel, message_to_send)
 
       elif '!remind' in message.content:
         message_to_send = self.message.message_for_remind(message)
-        await self.client.send_message(self.channel, message_to_send)
+        await self.client.send_message(channel, message_to_send)
 
     self.client.run(TOKEN)
 

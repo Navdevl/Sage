@@ -8,6 +8,14 @@ class Message:
     self.db = Database()
     self.extractor = Extractor()
 
+  def message_for_init(self, message):
+    self.channel = message.channel
+    if self.db.add_channel_to_server(message.server.id, message.channel.id):
+      message_to_send = "**{0}** is initialized for showing reminders".format(message.channel.name)
+    else:
+      message_to_send = "Oops, Something went wrong.!"
+    return message_to_send
+
   def message_for_list(self, server_id):
     results = self.db.show_all(server_id)
     message_to_send = self.convert_to_message(results)
