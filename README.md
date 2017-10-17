@@ -1,4 +1,4 @@
-# MrPerfect
+# Sage
 A Discord Bot to Add/View/Delete Reminders. 
 
 # Requirements
