@@ -19,6 +19,9 @@ Run [install.sh](https://github.com/Navdevl/Sage/blob/master/install.sh) from te
 - Copy the token
 - Configure the token value in [config.py](https://github.com/Navdevl/Sage/blob/master/config.py)
 
+# Invite the App to Server
+Go to https://discordapp.com/oauth2/authorize?client_id=CLIENT_ID&scope=bot&permissions=1
+
 # Usage
 - **Initialize the channel for Sage to send reminders.**
 Type `!init` on the channel where you want the bot to send messages
