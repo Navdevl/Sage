@@ -1,5 +1,5 @@
 # Sage
-A Discord Bot to Add/View/Delete Reminders. 
+Sage - A Discord Bot to Add/View/Delete Reminders. 
 
 # Requirements
 Python 3.5 or more
@@ -9,6 +9,15 @@ Python 3.5 or more
 Go to https://www.python.org/downloads/ and download the package that matches required version.
 ### Installing Python Packages
 Run [install.sh](https://github.com/Navdevl/Sage/blob/master/install.sh) from terminal. It will install all the necessary packages. If you wanted to manually install packages in any virtual environment, you can check the requirements.txt file to see the necessary packages with minimum version needed.
+
+# Configuration
+- Create a account in http://discordapp.com
+- Go to https://discordapp.com/developers/applications/me
+- Click on **New App**
+- Fill all the details and create a new app
+- Create a **Bot User**
+- Copy the token
+- Configure the token value in [config.py](https://github.com/Navdevl/Sage/blob/master/config.py)
 
 # Usage
 - **Initialize the channel for Sage to send reminders.**
