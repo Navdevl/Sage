@@ -24,9 +24,10 @@ class Database:
     Create the table if not exists
     See the documentation for the detailed information of table structure
     """
-    self.conn.execute('''CREATE TABLE IF NOT EXISTS SERVER
+    self.conn.execute('''CREATE TABLE IF NOT EXISTS CONFIG
              (ID INTEGER PRIMARY KEY,
-             CHANNEL_ID INTEGER NOT NULL);''')
+             CHANNEL_ID INTEGER NOT NULL,
+             TIMEZONE TEXT);''')
 
     self.conn.execute('''CREATE TABLE IF NOT EXISTS REMINDERS
              (UID VARCHAR2 PRIMARY KEY,
@@ -40,11 +41,11 @@ class Database:
     """ 
     Add default channel of the server
     """
-    self.conn.execute("INSERT OR REPLACE INTO SERVER (ID, CHANNEL_ID) VALUES ('{0}', '{1}');".format(server_id, channel_id))
+    self.conn.execute("INSERT OR REPLACE INTO CONFIG (ID, CHANNEL_ID) VALUES ('{0}', '{1}');".format(server_id, channel_id))
     return self.commit()
 
   def get_server_channel(self, server_id):
-    return self.conn.execute("SELECT * FROM SERVER WHERE ID = '{0}' LIMIT 1;".format(server_id)).fetchall()
+    return self.conn.execute("SELECT * FROM CONFIG WHERE ID = '{0}' LIMIT 1;".format(server_id)).fetchall()
 
   def add_reminder(self, name, server_id, frequency, time):
     """ 
@@ -58,7 +59,7 @@ class Database:
     """
     Fetch Reminder from the database of particular time
     """
-    return self.conn.execute("SELECT * FROM REMINDERS LEFT JOIN SERVER ON REMINDERS.SERVER_ID = SERVER.ID where REMIND_AT = '{0}';".format(remind_time)).fetchall()
+    return self.conn.execute("SELECT * FROM REMINDERS LEFT JOIN CONFIG ON REMINDERS.SERVER_ID = CONFIG.ID where REMIND_AT = '{0}';".format(remind_time)).fetchall()
 
   def delete_reminder(self, uid, server_id):
     """ 
@@ -71,7 +72,7 @@ class Database:
     """
     List down all the reminders belongs to particular server
     """
-    results = self.conn.execute("SELECT * FROM REMINDERS LEFT JOIN SERVER ON REMINDERS.SERVER_ID = SERVER.ID WHERE SERVER_ID = {0};".format(server_id)).fetchall()
+    results = self.conn.execute("SELECT * FROM REMINDERS LEFT JOIN CONFIG ON REMINDERS.SERVER_ID = CONFIG.ID WHERE SERVER_ID = {0};".format(server_id)).fetchall()
     return results
 
   def commit(self):

@@ -1,12 +1,25 @@
-## Proposed changes
+### Proposed Issue
 
-Describe the big picture of your changes here to communicate to the maintainers why we should accept this pull request. If it fixes a bug or resolves a feature request, be sure to link to that issue.
-
-## Types of changes
-
-What types of changes does your code introduce to Sage?
+Please follow the general troubleshooting steps first:
 _Put an `x` in the boxes that apply_
+- [ ] Bug Fix ?
+- [ ] New Feature ?
+- [ ] Deprecation error ?
 
-- [ ] Bugfix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+<!-- You can erase any parts of this template not applicable to your Issue. -->
+
+### Bug reports:
+
+Please replace this line with a brief summary of your issue **AND** if reporting a build issue include the link from:
+
+### Features:
+
+**Please note by far the quickest way to get a new feature is to file a Pull Request.**
+
+We will consider your request but it may be closed if it's something we're not actively planning to work on.
+
+### Additional Information:
+
+Expected Behavior :
+
+Current Behavior :

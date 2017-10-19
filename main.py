@@ -45,6 +45,7 @@ class Main:
       if message.author == self.client.user:
         return
 
+      message.content = message.content.lower()
       channel = self.get_server_channel(message.server)
 
       if message.content == '!init':
